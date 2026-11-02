@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KIET Book Store</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .logo span {
+            color: #38bdf8;
+        }
+
+        nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        nav a {
+            color: #e2e8f0;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: #38bdf8;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: #0f172a;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 4px;
+            background-color: #2563eb;
+            margin: 8px auto 0 auto;
+            border-radius: 2px;
+        }
+
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .badge {
+            align-self: flex-start;
+            background-color: #e0f2fe;
+            color: #0369a1;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 8px;
+            color: #0f172a;
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-bottom: 6px;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #16a34a;
+        }
+
+        .status {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #2563eb;
+        }
+
+        .section-box {
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #334155;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 1rem;
+            background-color: #f8fafc;
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #2563eb;
+            background-color: white;
+        }
+
+        .readonly-input {
+            background-color: #e2e8f0 !important;
+            font-weight: bold;
+            color: #0f172a;
+        }
+
+        .btn-submit {
+            background-color: #2563eb;
+            color: white;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-submit:hover {
+            background-color: #1d4ed8;
+        }
+
+        #summaryBox {
+            display: none;
+            background-color: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 25px;
+        }
+
+        #summaryBox h3 {
+            color: #166534;
+            margin-bottom: 10px;
+        }
+
+        #summaryText p {
+            margin-bottom: 6px;
+            color: #15803d;
+        }
+
+        .faq-item {
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            background-color: #f8fafc;
+            padding: 15px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-question:hover {
+            background-color: #f1f5f9;
+        }
+
+        .faq-answer {
+            display: none;
+            padding: 15px 20px;
+            background-color: white;
+            border-top: 1px solid #e2e8f0;
+            color: #475569;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #64748b;
+            font-size: 0.9rem;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 40px;
+        }
+
+        #topBtn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #2563eb;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 15px;
+            font-size: 1rem;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        #topBtn:hover {
+            background-color: #1d4ed8;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-inner">
+            <div class="logo">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                </svg>
+                <h1>KIET <span>BookStore</span></h1>
+            </div>
+            <nav>
+                <a href="#books">Catalog</a>
+                <a href="#order">Place Order</a>
+                <a href="#faq">FAQ</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2 class="section-title" id="books">Academic Textbooks</h2>
+
+        <div class="book-grid">
+            <div class="card">
+                <div>
+                    <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&auto=format&fit=crop&q=80" alt="C Programming Book">
+                    <span class="badge">Computer Science</span>
+                    <h3>C Programming Essentials</h3>
+                    <p><b>Author:</b> Dr. A. K. Sharma</p>
+                    <p>Comprehensive guide covering standard C syntax, pointers, and memory management.</p>
+                </div>
+                <div class="price-row">
+                    <span class="price">₹350</span>
+                    <span class="status">In Stock</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div>
+                    <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?w=400&auto=format&fit=crop&q=80" alt="Electrical Engineering Book">
+                    <span class="badge">Electrical</span>
+                    <h3>Basic Electrical Engg.</h3>
+                    <p><b>Author:</b> Prof. R. Verma</p>
+                    <p>Foundational principles of AC/DC circuits, transformers, and electrical machines.</p>
+                </div>
+                <div class="price-row">
+                    <span class="price">₹420</span>
+                    <span class="status">In Stock</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div>
+                    <img src="https://images.unsplash.com/photo-1509228468518-180dd4864904?w=400&auto=format&fit=crop&q=80" alt="Mathematics Book">
+                    <span class="badge">Mathematics</span>
+                    <h3>Engineering Mathematics</h3>
+                    <p><b>Author:</b> Dr. H. K. Dass</p>
+                    <p>Advanced calculus, linear algebra, vector analysis, and differential equations.</p>
+                </div>
+                <div class="price-row">
+                    <span class="price">₹500</span>
+                    <span class="status">In Stock</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div>
+                    <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&auto=format&fit=crop&q=80" alt="Web Development Book">
+                    <span class="badge">Information Tech</span>
+                    <h3>Web Design & Cloud Basics</h3>
+                    <p><b>Author:</b> Dr. N. K. Gupta</p>
+                    <p>Practical guide covering responsive HTML, CSS layouts, and cloud foundation fundamentals.</p>
+                </div>
+                <div class="price-row">
+                    <span class="price">₹450</span>
+                    <span class="status">In Stock</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-box" id="order">
+            <h2 class="section-title">Order Processing</h2>
+
+            <form id="orderForm">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" placeholder="e.g. Tanya Gupta">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="e.g. student@kiet.edu">
+                </div>
+
+                <div class="form-group">
+                    <label for="bookSelect">Select Textbook</label>
+                    <select id="bookSelect" onchange="calculateTotal()">
+                        <option value="0">-- Choose a Book --</option>
+                        <option value="350">C Programming Essentials - ₹350</option>
+                        <option value="420">Basic Electrical Engg. - ₹420</option>
+                        <option value="500">Engineering Mathematics - ₹500</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="quantity">Quantity</label>
+                    <input type="number" id="quantity" min="1" value="1" oninput="calculateTotal()">
+                </div>
+
+                <div class="form-group">
+                    <label for="totalPrice">Total Calculated Price (₹)</label>
+                    <input type="text" id="totalPrice" value="0" readonly class="readonly-input">
+                </div>
+
+                <button type="button" class="btn-submit" onclick="submitOrder()">Confirm Order</button>
+            </form>
+
+            <div id="summaryBox">
+                <h3>Order Receipt Generated</h3>
+                <div id="summaryText"></div>
+            </div>
+        </div>
+
+        <div class="section-box" id="faq">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq('faq1')">
+                    <span>How can I collect my ordered books?</span>
+                    <span>+</span>
+                </div>
+                <div class="faq-answer" id="faq1">
+                    You can collect your books directly from the KIET Central Library counter by showing your generated order receipt.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq('faq2')">
+                    <span>What payment methods are accepted?</span>
+                    <span>+</span>
+                </div>
+                <div class="faq-answer" id="faq2">
+                    Cash on collection and UPI payments (Google Pay, PhonePe, Paytm) are accepted at the library collection counter.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button id="topBtn">Go to Top</button>
+
+    <footer>
+        <p>&copy; KIET Book Store. Academic Project Demonstration.</p>
+    </footer>
+
+    <script>
+        function calculateTotal() {
+            const price = parseFloat(document.getElementById("bookSelect").value);
+            let quantity = parseInt(document.getElementById("quantity").value, 10);
+
+            if (isNaN(price) || price <= 0) {
+                document.getElementById("totalPrice").value = "0";
+                return;
+            }
+
+            if (isNaN(quantity) || quantity < 1) {
+                quantity = 0;
+            }
+
+            const total = price * quantity;
+            document.getElementById("totalPrice").value = total;
+        }
+
+        function submitOrder() {
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const bookSelect = document.getElementById("bookSelect");
+            const bookName = bookSelect.options[bookSelect.selectedIndex].text;
+            const total = document.getElementById("totalPrice").value;
+            const summaryBox = document.getElementById("summaryBox");
+            const summaryText = document.getElementById("summaryText");
+
+            if (name === "") {
+                alert("Please enter your name.");
+                return;
+            }
+
+            if (email === "") {
+                alert("Please enter your email.");
+                return;
+            }
+
+            if (bookSelect.value === "0") {
+                alert("Please select a book from the list.");
+                return;
+            }
+
+            summaryText.innerHTML =
+                "<p><b>Student Name:</b> " + name + "</p>" +
+                "<p><b>Email:</b> " + email + "</p>" +
+                "<p><b>Item:</b> " + bookName + "</p>" +
+                "<p><b>Total Amount:</b> ₹" + total + "</p>";
+
+            summaryBox.style.display = "block";
+        }
+
+        function toggleFaq(faqId) {
+            const element = document.getElementById(faqId);
+            element.style.display = (element.style.display === "block") ? "none" : "block";
+        }
+
+        const topBtn = document.getElementById("topBtn");
+
+        topBtn.addEventListener("click", function () {
+            const startPosition = window.pageYOffset;
+            const duration = 7000;
+            let startTime = null;
+
+            function animation(currentTime) {
+                if (startTime === null) startTime = currentTime;
+
+                const timeElapsed = currentTime - startTime;
+                const progress = Math.min(timeElapsed / duration, 1);
+
+                window.scrollTo(0, startPosition * (1 - progress));
+
+                if (timeElapsed < duration) {
+                    requestAnimationFrame(animation);
+                }
+            }
+
+            requestAnimationFrame(animation);
+        });
+    </script>
+</body>
+</html>
